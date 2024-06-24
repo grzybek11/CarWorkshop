@@ -1,12 +1,12 @@
-﻿using CarWorkshop.Application.CarWorkshop;
-using AutoMapper;
-using CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop;
-using CarWorkshop.Application.CarWorkshop.Commands.EditCarWorkshop;
+﻿using AutoMapper;
 using CarWorkshop.Application.CarWorkshop.Queries.GetAllCarWorkshops;
 using CarWorkshop.Application.CarWorkshop.Queries.GetCarWorkshopByEncodedName;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using CarWorkshop.Application.CarWorkshop.Queries.GetCarworkshopByEncodedName;
+using CarWorkshop.Application.CarWorkshop;
+using CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop;
+using CarWorkshop.Application.CarWorkshop.Commands.EditCarWorkshop;
+
 namespace CarWorkshop.MVC.Controllers
 {
     public class CarWorkshopController : Controller
@@ -14,7 +14,6 @@ namespace CarWorkshop.MVC.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public CarWorkshopController(IMediator mediator);
         public CarWorkshopController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
