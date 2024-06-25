@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CarWorkshop.Application.CarWorkshop;
 using CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop;
 using CarWorkshop.Application.CarWorkshop.Commands.EditCarWorkshop;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarWorkshop.MVC.Controllers
 {
@@ -26,10 +27,7 @@ namespace CarWorkshop.MVC.Controllers
             var carWorkshops = await _mediator.Send(new GetAllCarWorkshopsQuery());
             return View(carWorkshops);
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+
         [Route("CarWorkshop/{encodedName}/Details")]
         public async Task<IActionResult> Details(string encodedName)
         {
@@ -38,10 +36,18 @@ namespace CarWorkshop.MVC.Controllers
         }
 
 
-        [Route("CarWorkshop/{encodedName}/Edit")]
+
+
+
+    [Route("CarWorkshop/{encodedName}/Edit")]
         public async Task<IActionResult> Edit(string encodedName)
         {
             var dto = await _mediator.Send(new GetCarWorkshopByEncodedNameQuery(encodedName));
+
+            if (!dto.IsEditable)
+            {
+                return RedirectToAction("NoAccess", "Home");
+            }
 
             EditCarWorkshopCommand model = _mapper.Map<EditCarWorkshopCommand>(dto);
 
@@ -61,7 +67,14 @@ namespace CarWorkshop.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Owner")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
+        [Authorize(Roles = "Owner")]
         public async Task<IActionResult> Create(CreateCarWorkshopCommand command)
         {
             if (!ModelState.IsValid)

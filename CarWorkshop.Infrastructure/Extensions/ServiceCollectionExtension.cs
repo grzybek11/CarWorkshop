@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CarWorkshop.Infrastructure.Seeders;
 using CarWorkshop.Infrastructure.Repositories;
 using CarWorkshop.Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace CarWorkshop.Infrastructure.Extensions
 {
@@ -19,6 +20,10 @@ namespace CarWorkshop.Infrastructure.Extensions
         {
             services.AddDbContext<CarWorkshopDbContext>(options => options.UseSqlServer(
                 configuration.GetConnectionString("CarWorkshop")));
+
+            services.AddDefaultIdentity<IdentityUser>()
+               .AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<CarWorkshopDbContext>();
 
             services.AddScoped<CarWorkshopSeeder>();
 
